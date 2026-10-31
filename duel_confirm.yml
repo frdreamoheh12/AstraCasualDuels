@@ -1,0 +1,70 @@
+menu_title: '&#42A5FF&lCONFIRM YOUR DUEL'
+size: 27
+
+items:
+
+  'filler':
+    material: BLUE_STAINED_GLASS_PANE
+    display_name: ' '
+    slots:
+      - 0-8
+      - 18-26
+
+  'summary':
+    material: BOOK
+    slot: 13
+    display_name: '&#42A5FF&l⚔ DUEL SUMMARY'
+    lore:
+      - ''
+      - '&#42A5FF&l&nYOUR MATCH DETAILS&r'
+      - ''
+      - '&#AAB8CCReview your selected configuration.'
+      - ''
+      - '&#FFFFFF&lDUEL SETTINGS:'
+      - '&#42A5FF• &fMap: &7Check selection'
+      - '&#42A5FF• &fLevel: &7Check selection'
+      - '&#42A5FF• &fTheme: &7Check selection'
+      - '&#42A5FF• &fBet: &7Check selection'
+      - ''
+      - '&#FF5555&lIMPORTANT:'
+      - '&#AAB8CCMake sure your wager is correct.'
+      - ''
+      - '&#55FF77&lGood luck!'
+
+  'back':
+    material: RED_STAINED_GLASS
+    slot: 11
+    display_name: '&#FF5555&l✖ GO BACK'
+    lore:
+      - ''
+      - '&#FF5555&l&nCHANGE SETTINGS&r'
+      - ''
+      - '&#AAB8CCWant to change your configuration?'
+      - '&#AAB8CCReturn to the previous menu.'
+      - ''
+      - '&#FF5555&l➜ CLICK TO RETURN'
+    left_click_commands:
+      - '[openguimenu] duel_setup'
+
+  'start':
+    material: LIME_STAINED_GLASS
+    slot: 15
+    display_name: '&#55FF77&l✔ START DUEL'
+    lore:
+      - ''
+      - '&#55FF77&l&nFINAL CONFIRMATION&r'
+      - ''
+      - '&#AAB8CCReady to create your duel?'
+      - ''
+      - '&#FFFFFF&lCONFIRMATION:'
+      - '&#55FF77• &fAccept selected settings'
+      - '&#55FF77• &fConfirm your wager'
+      - '&#55FF77• &fCreate your challenge'
+      - ''
+      - '&#FF5555&lWARNING:'
+      - '&#AAB8CCCheck your wager before starting.'
+      - ''
+      - '&#55FF77&l➜ CLICK TO START'
+    left_click_commands:
+      - '[player] duel create'
+      - '[close]'
