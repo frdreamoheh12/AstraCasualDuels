@@ -1,0 +1,91 @@
+menu_title: '&#42A5FF&lSELECT DUEL MAP'
+size: 27
+
+items:
+
+  'filler':
+    material: BLUE_STAINED_GLASS_PANE
+    display_name: ' '
+    slots:
+      - 0-8
+      - 18-26
+
+  'desert':
+    material: SAND
+    slot: 10
+    display_name: '&#E6C16A&l🏜 DESERT'
+    lore:
+      - ''
+      - '&#E6C16A&l&nMAP INFORMATION&r'
+      - ''
+      - '&#AAB8CCA warm desert battle arena.'
+      - '&#AAB8CCFight across the sandy landscape.'
+      - ''
+      - '&#FFFFFF&lMAP: &#E6C16ADesert'
+      - ''
+      - '&#55FF77&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel map Desert'
+
+  'iceland':
+    material: PACKED_ICE
+    slot: 12
+    display_name: '&#65D9FF&l❄ ICELAND'
+    lore:
+      - ''
+      - '&#65D9FF&l&nMAP INFORMATION&r'
+      - ''
+      - '&#AAB8CCA frozen battlefield.'
+      - '&#AAB8CCFight in an icy environment.'
+      - ''
+      - '&#FFFFFF&lMAP: &#65D9FFIceland'
+      - ''
+      - '&#55FF77&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel map Iceland'
+
+  'road':
+    material: GRAY_CONCRETE
+    slot: 14
+    display_name: '&#B5B5B5&l🛣 ROAD'
+    lore:
+      - ''
+      - '&#B5B5B5&l&nMAP INFORMATION&r'
+      - ''
+      - '&#AAB8CCA road-themed battle arena.'
+      - '&#AAB8CCPrepare for a competitive fight.'
+      - ''
+      - '&#FFFFFF&lMAP: &#B5B5B5Road'
+      - ''
+      - '&#55FF77&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel map Road'
+
+  'city':
+    material: BRICKS
+    slot: 16
+    display_name: '&#FFB347&l🏙 CITY'
+    lore:
+      - ''
+      - '&#FFB347&l&nMAP INFORMATION&r'
+      - ''
+      - '&#AAB8CCA city-themed battle arena.'
+      - '&#AAB8CCTake the fight to the streets.'
+      - ''
+      - '&#FFFFFF&lMAP: &#FFB347City'
+      - ''
+      - '&#55FF77&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel map City'
+
+  'back':
+    material: ARROW
+    slot: 22
+    display_name: '&#FF5555&l⬅ BACK'
+    lore:
+      - ''
+      - '&#AAB8CCReturn to duel configuration.'
+      - ''
+      - '&#FF5555&l➜ CLICK TO RETURN'
+    left_click_commands:
+      - '[openguimenu] duel_setup'

@@ -1,0 +1,132 @@
+menu_title: '&#42A5FF&lASTRA &#FFFFFF&lCASUAL DUELS'
+open_command:
+  - duel
+size: 27
+
+items:
+
+  'filler':
+    material: BLUE_STAINED_GLASS_PANE
+    display_name: ' '
+    slots:
+      - 0-8
+      - 18-26
+
+  'information':
+    material: BOOK
+    slot: 4
+    display_name: '&#42A5FF&l⚔ DUEL CONFIGURATION'
+    lore:
+      - ''
+      - '&#42A5FF&l&nMATCH SETTINGS&r'
+      - ''
+      - '&#AAB8CCConfigure your upcoming duel.'
+      - '&#AAB8CCSelect your preferred settings.'
+      - ''
+      - '&#FFFFFF&lAVAILABLE SETTINGS:'
+      - '&#42A5FF• &fBattle Map'
+      - '&#42A5FF• &fDuel Level'
+      - '&#42A5FF• &fDuel Theme'
+      - '&#42A5FF• &fBet Amount'
+      - ''
+      - '&#55FF77&l➜ READY WHEN YOU ARE'
+
+  'map':
+    material: MAP
+    slot: 10
+    display_name: '&#42A5FF&l🏹 SELECT MAP'
+    lore:
+      - ''
+      - '&#42A5FF&l&nMAP SELECTION&r'
+      - ''
+      - '&#AAB8CCChoose your preferred battle arena.'
+      - '&#AAB8CCEach map offers a different setting.'
+      - ''
+      - '&#FFFFFF&lAVAILABLE MAPS:'
+      - '&#42A5FF• &fDesert'
+      - '&#42A5FF• &fIceland'
+      - '&#42A5FF• &fRoad'
+      - '&#42A5FF• &fCity'
+      - ''
+      - '&#42A5FF&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[openguimenu] duel_maps'
+
+  'level':
+    material: EXPERIENCE_BOTTLE
+    slot: 12
+    display_name: '&#A855FF&l⚔ SELECT LEVEL'
+    lore:
+      - ''
+      - '&#A855FF&l&nLEVEL SELECTION&r'
+      - ''
+      - '&#AAB8CCChoose your duel difficulty.'
+      - ''
+      - '&#FFFFFF&lLEVEL OPTIONS:'
+      - '&#A855FF• &fBeginner'
+      - '&#A855FF• &fIntermediate'
+      - '&#A855FF• &fExpert'
+      - ''
+      - '&#A855FF&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel level'
+
+  'theme':
+    material: FIREWORK_STAR
+    slot: 14
+    display_name: '&#FFB347&l✨ SELECT THEME'
+    lore:
+      - ''
+      - '&#FFB347&l&nTHEME SELECTION&r'
+      - ''
+      - '&#AAB8CCCustomize the style of your duel.'
+      - ''
+      - '&#FFFFFF&lTHEME OPTIONS:'
+      - '&#FFB347• &fDefault'
+      - '&#FFB347• &fClassic'
+      - '&#FFB347• &fSpecial'
+      - ''
+      - '&#FFB347&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel theme'
+
+  'bet':
+    material: GOLD_INGOT
+    slot: 16
+    display_name: '&#FFD45C&l💰 SELECT BET'
+    lore:
+      - ''
+      - '&#FFD45C&l&nBET CONFIGURATION&r'
+      - ''
+      - '&#AAB8CCChoose how much you want to wager.'
+      - '&#AAB8CCYour opponent must accept the wager.'
+      - ''
+      - '&#FFFFFF&lBET INFORMATION:'
+      - '&#FFD45C• &fChoose your amount'
+      - '&#FFD45C• &fCheck your balance'
+      - '&#FFD45C• &fConfirm your wager'
+      - ''
+      - '&#FFD45C&l➜ CLICK TO SELECT'
+    left_click_commands:
+      - '[player] duel bet'
+
+  'confirm':
+    material: GREEN_STAINED_GLASS
+    slot: 22
+    display_name: '&#55FF77&l✔ CONFIRM DUEL'
+    lore:
+      - ''
+      - '&#55FF77&l&nFINAL CONFIGURATION&r'
+      - ''
+      - '&#AAB8CCFinished setting up your duel?'
+      - '&#AAB8CCReview everything before proceeding.'
+      - ''
+      - '&#FFFFFF&lCHECK BEFORE CONTINUING:'
+      - '&#55FF77• &fSelected Map'
+      - '&#55FF77• &fSelected Level'
+      - '&#55FF77• &fSelected Theme'
+      - '&#55FF77• &fSelected Bet'
+      - ''
+      - '&#55FF77&l➜ CLICK TO CONTINUE'
+    left_click_commands:
+      - '[openguimenu] duel_confirm'

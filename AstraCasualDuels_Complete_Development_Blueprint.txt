@@ -1,0 +1,748 @@
+ASTRACASUALDUELS — COMPLETE DEVELOPMENT BLUEPRINT
+=================================================
+
+PLUGIN OVERVIEW
+---------------
+AstraCasualDuels is a configurable 1v1 duel plugin for Lifesteal Survival servers. Players challenge another player, configure a match through DeluxeMenus, wager in-game currency, and fight using their own equipment and inventory.
+
+Core features:
+- Player-to-player challenges.
+- DeluxeMenus-based configuration interface.
+- Custom battle maps.
+- Custom duel levels.
+- Manually registered duel themes.
+- In-game currency wagering.
+- Private bet amount input.
+- Challenge acceptance system.
+- Automatic countdown.
+- Match start and end titles.
+- Automatic winner payout.
+- Player inventory preservation.
+- Configurable sounds, messages and timings.
+
+1. COMPLETE PLAYER WORKFLOW
+---------------------------
+1. Challenge a player:
+   /duel PlayerName
+
+   The plugin validates the target and creates a private duel setup session.
+
+2. Main configuration menu:
+   Automatically opens duel_setup.yml through DeluxeMenus.
+
+   The challenger selects:
+   - Map
+   - Level
+   - Theme
+   - Bet amount
+
+3. Select battle map:
+   Default maps:
+   - Desert
+   - Iceland
+   - Road
+   - City
+
+4. Select duel level:
+   Default levels:
+   - Beginner
+   - Intermediate
+   - Expert
+
+5. Select theme:
+   Themes are registered manually by the administrator. New themes must be addable through configuration without changing Java source code.
+
+6. Enter wager amount:
+   The player enters an amount through private chat input.
+   Examples: 5m, 100k, 1000.
+   Only the challenger sees the input prompt and their input.
+
+7. Confirmation menu:
+   Opens duel_confirm.yml and displays the selected opponent, map, level, theme and wager.
+
+8. Send duel invitation:
+   When the challenger confirms, the opponent receives an invitation containing the duel details and wager. The opponent must accept.
+
+9. Prepare the match:
+   Verify both players, balances, arena availability and match conditions. Assign both players to the selected arena.
+
+10. Countdown:
+    Configurable countdown: 5, 4, 3, 2, 1.
+    Each number displays as a title with its configured vanilla Minecraft sound.
+
+11. Fight begins:
+    Display a configurable FIGHT BEGINS title and sound.
+    Players fight using their own equipment and inventory.
+
+12. Match completion:
+    Detect the winner, handle wager payout, restore required player state and release the arena.
+
+2. DELUXEMENUS INTEGRATION
+--------------------------
+The plugin must NOT replace DeluxeMenus with its own Bukkit inventory GUI.
+
+Integrate with the actual installed DeluxeMenus plugin.
+
+Generate these default menu files during first startup:
+
+plugins/
+  AstraCasualDuels/
+    config.yml
+    messages.yml
+    maps.yml
+    levels.yml
+    themes.yml
+    economy.yml
+    countdown.yml
+    arenas/
+  DeluxeMenus/
+    gui_menus/
+      duel_setup.yml
+      duel_confirm.yml
+      duel_maps.yml
+      duel_levels.yml
+      duel_themes.yml
+      duel_bet.yml
+
+Important:
+- Generate default menu files in the DeluxeMenus GUI menu directory.
+- Never overwrite administrator-customized files on restart or reload.
+- Generate missing files only.
+- Use the supplied menu designs as the default layouts.
+- Ensure generated menus are registered through the actual DeluxeMenus-supported configuration and reload mechanism. Merely writing a YAML file does not guarantee registration.
+- Validate menu commands and duel session state.
+
+Commands used by menu YAML:
+- [player] duel map Desert
+- [player] duel map Iceland
+- [player] duel map Road
+- [player] duel map City
+- [player] duel level
+- [player] duel theme
+- [player] duel bet
+- [player] duel create
+- [openguimenu] duel_setup
+- [openguimenu] duel_maps
+- [openguimenu] duel_confirm
+
+PlaceholderAPI placeholders:
+%astracasualduels_target%
+%astracasualduels_map%
+%astracasualduels_level%
+%astracasualduels_theme%
+%astracasualduels_bet%
+%astracasualduels_player_balance%
+%astracasualduels_target_balance%
+
+These placeholders allow DeluxeMenus to display the actual selected settings.
+
+Menu files and purpose:
+- duel_setup.yml: Main configuration menu.
+- duel_confirm.yml: Final confirmation.
+- duel_maps.yml: Map selection.
+- duel_levels.yml: Level selection.
+- duel_themes.yml: Theme selection.
+- duel_bet.yml: Bet configuration.
+
+3. MAP CONFIGURATION
+--------------------
+Create maps.yml. Maps must be administrator-defined, not hardcoded.
+
+Example:
+
+maps:
+  Desert:
+    enabled: true
+    display-name: "&eDesert"
+    world: "world"
+    arena: "desert"
+
+  Iceland:
+    enabled: true
+    display-name: "&bIceland"
+    world: "world"
+    arena: "iceland"
+
+  Road:
+    enabled: true
+    display-name: "&7Road"
+    world: "world"
+    arena: "road"
+
+  City:
+    enabled: true
+    display-name: "&6City"
+    world: "world"
+    arena: "city"
+
+Each map should support:
+- Enabled status
+- Display name
+- World
+- Associated arena
+- Description
+
+Example arena configuration:
+
+arenas:
+  desert:
+    map: Desert
+    world: world
+    spawn-1:
+      x: 100
+      y: 80
+      z: 100
+      yaw: 90
+      pitch: 0
+    spawn-2:
+      x: 120
+      y: 80
+      z: 100
+      yaw: -90
+      pitch: 0
+
+Allow administrators to create additional maps and arenas without changing Java source code. Each arena has two configurable spawn locations, including world, X, Y, Z, yaw and pitch.
+
+4. DUEL LEVELS
+--------------
+Create levels.yml.
+
+Example:
+
+levels:
+  Beginner:
+    enabled: true
+    display-name: "&5Beginner"
+
+  Intermediate:
+    enabled: true
+    display-name: "&eIntermediate"
+
+  Expert:
+    enabled: true
+    display-name: "&cExpert"
+
+Support custom levels, display names, descriptions, enabled status and GUI settings.
+
+Levels must not automatically provide kits. Players fight with their own grinded equipment, armor, weapons and inventory.
+
+5. CUSTOM DUEL THEMES
+---------------------
+Create themes.yml.
+
+Example:
+
+themes:
+  Default:
+    enabled: true
+    display-name: "&fDefault"
+    color: "#42A5FF"
+
+  Classic:
+    enabled: true
+    display-name: "&6Classic"
+    color: "#FFB347"
+
+  Special:
+    enabled: true
+    display-name: "&dSpecial"
+    color: "#A855FF"
+
+Administrators must be able to add unlimited custom themes through YAML without modifying Java source.
+
+Each theme can support:
+- Display name
+- Description
+- GUI material
+- GUI slot
+- Display color
+- Enabled/disabled status
+
+The plugin must read themes dynamically.
+
+6. BET INPUT SYSTEM
+-------------------
+When a player clicks the bet option:
+1. Close the GUI.
+2. Start a private chat-input session.
+3. Send an input prompt exclusively to that player.
+4. Accept shorthand amounts.
+5. Validate the amount.
+6. Store the wager.
+7. Automatically reopen the main setup menu.
+
+Supported input examples:
+
+Input       Parsed amount
+1000        1,000
+100k        100,000
+500k        500,000
+1m          1,000,000
+5m          5,000,000
+10m         10,000,000
+
+The parser must be case-insensitive and reject invalid, negative, zero and overflowing values.
+
+Additional requirements:
+- Input must never be broadcast to other players.
+- Allow cancellation with a configurable keyword such as "cancel".
+- Add a configurable input timeout.
+- Handle player disconnects during input.
+- Do not accept commands as wager amounts unless explicitly configured.
+
+7. ECONOMY AND WAGERING
+-----------------------
+The wager is virtual server currency only.
+
+Example:
+- Player A stakes 5,000,000.
+- Player B accepts and stakes 5,000,000.
+- Total winner payout: 10,000,000.
+- Winner receives both stakes; the loser's stake is transferred to the winner.
+
+Implement an economy abstraction supporting Vault and an optional direct ExcellentEconomy integration where compatible.
+
+Transaction rules:
+- Do not withdraw money when a player merely opens a menu or starts configuring a challenge.
+- Reserve both stakes only after the opponent accepts and the match is ready to begin.
+- Do not allow either player to spend reserved money.
+- If the duel is cancelled before combat starts, refund both players.
+- Never pay out twice.
+- Never charge the same player twice.
+- Never allow negative balances.
+- Handle failed withdrawals and deposits.
+- Persist transaction state.
+- Handle server shutdown and recovery.
+- Handle offline winners and refunds safely.
+- Make transaction processing idempotent.
+- Do not silently lose currency if an economy operation fails.
+- Do not construct unsafe console commands from untrusted player input.
+
+8. COUNTDOWN AND FIGHT SYSTEM
+-----------------------------
+Create countdown.yml.
+
+Example:
+
+countdown:
+  enabled: true
+  seconds: 5
+
+  titles:
+    "5":
+      title: "&b&l5"
+      subtitle: "&7Get ready!"
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+    "4":
+      title: "&b&l4"
+      subtitle: "&7Prepare yourself!"
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+    "3":
+      title: "&b&l3"
+      subtitle: "&7The battle is approaching!"
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+    "2":
+      title: "&b&l2"
+      subtitle: "&7Almost there!"
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+    "1":
+      title: "&a&l1"
+      subtitle: "&7Fight!"
+      sound: "BLOCK_NOTE_BLOCK_PLING"
+
+  fight:
+    title: "&a&lFIGHT BEGINS!"
+    subtitle: "&7Defeat your opponent!"
+    sound: "ENTITY_ENDER_DRAGON_GROWL"
+
+All titles, subtitles, sounds, delays and countdown values must be customizable.
+
+Combat must not become active until the countdown has finished.
+
+9. MATCH MANAGEMENT
+-------------------
+Use a proper duel state manager.
+
+States:
+- CREATING: Challenger configures duel.
+- PENDING: Waiting for opponent.
+- ACCEPTED: Opponent accepted.
+- PREPARING: Checking players and arena.
+- COUNTDOWN: Countdown running.
+- ACTIVE: Fight in progress.
+- FINISHED: Match completed.
+- CANCELLED: Match cancelled.
+
+Detect:
+- Player death.
+- Player disconnect.
+- Player leaving the assigned arena.
+- Administrator cancellation.
+- Server shutdown.
+- Invalid arena or player state.
+
+Do not declare a winner because of an unrelated damage event or an unfinished countdown.
+
+Each match must have an isolated session and unique identifier. Prevent a player from participating in multiple simultaneous duels.
+
+10. COMMANDS AND PERMISSIONS
+----------------------------
+Player commands:
+
+/duel
+  Open duel setup if a target is already selected.
+
+/duel <player>
+  Challenge a player and open setup.
+
+/duel map
+  Open map selection.
+
+/duel map <name>
+  Select a map.
+
+/duel level
+  Open level selection.
+
+/duel level <name>
+  Select a level.
+
+/duel theme
+  Open theme selection.
+
+/duel theme <name>
+  Select a theme.
+
+/duel bet
+  Start bet input.
+
+/duel create
+  Submit the configured challenge.
+
+/duel accept
+  Accept an invitation.
+
+/duel deny
+  Decline an invitation.
+
+/duel cancel
+  Cancel your pending challenge.
+
+/duel leave
+  Leave an active duel, subject to configured forfeiture rules.
+
+/duel help
+  Display help.
+
+Administrator commands:
+
+/duel admin reload
+/duel admin map create <name>
+/duel admin map remove <name>
+/duel admin arena create <name>
+/duel admin arena delete <name>
+/duel admin arena setspawn1 <name>
+/duel admin arena setspawn2 <name>
+/duel admin cancel <player>
+/duel admin info <player>
+
+Suggested permissions:
+
+astracasualduels.use
+astracasualduels.challenge
+astracasualduels.accept
+astracasualduels.admin
+astracasualduels.reload
+astracasualduels.bypass.cooldown
+astracasualduels.bypass.bet-limit
+
+Register commands and permissions properly in plugin.yml.
+
+11. ARENA AND MATCH MANAGEMENT
+------------------------------
+Implement:
+- DuelManager
+- ArenaManager
+- Arena availability checks
+- Arena registration
+- Spawn management
+- Player teleportation
+- Match state tracking
+- Match cleanup
+
+Teleport both players to their assigned arena spawns after acceptance and successful validation.
+
+Prevent two matches from occupying the same arena simultaneously.
+
+12. INVENTORY AND PLAYER PROTECTION
+-----------------------------------
+Players use their own grinded equipment. Do not automatically equip kits or replace their normal equipment.
+
+Preserve player inventories, armor, offhand, experience and other required player state.
+
+Implement reliable restoration on cancellation and normal match completion.
+
+Use safe inventory snapshots and persistent recovery data where appropriate.
+
+Never silently discard player items.
+
+Make the protection system configurable.
+
+Prevent exploits that duplicate equipment, let players escape match restrictions or avoid legitimate match results.
+
+Explicitly define and test death-drop handling, disconnect handling, restart recovery and inventory restoration before production release.
+
+13. MATCH COMPLETION
+--------------------
+When the match ends:
+1. Determine the winner.
+2. Mark the match as finished.
+3. Prevent further combat.
+4. Process the winner payout exactly once.
+5. Restore the required player state.
+6. Release the arena.
+7. Send configurable winner and loser messages.
+8. Clear the active duel session.
+
+If the server crashes during an active match, recover the match and its escrow safely.
+
+14. RECOMMENDED PROJECT ARCHITECTURE
+-----------------------------------
+Main package: com.astra.astracasualduels
+
+Suggested structure:
+
+com.astra.astracasualduels
+  AstraCasualDuels.java
+
+  commands/
+    DuelCommand.java
+    AdminCommand.java
+
+  duel/
+    Duel.java
+    DuelManager.java
+    DuelSession.java
+    DuelState.java
+    DuelChallenge.java
+    DuelListener.java
+
+  economy/
+    EconomyProvider.java
+    VaultEconomyProvider.java
+    ExcellentEconomyProvider.java
+
+  arena/
+    Arena.java
+    ArenaManager.java
+    ArenaListener.java
+
+  menus/
+    DeluxeMenusIntegration.java
+
+  input/
+    BetInputListener.java
+
+  countdown/
+    DuelCountdown.java
+
+  placeholders/
+    DuelPlaceholderExpansion.java
+
+  storage/
+    DuelStorage.java
+
+  config/
+    ConfigManager.java
+
+15. CONFIGURATION FILES
+-----------------------
+Generate:
+- config.yml
+- messages.yml
+- maps.yml
+- levels.yml
+- themes.yml
+- economy.yml
+- countdown.yml
+- arenas/
+- SQLite database
+
+All messages, titles, subtitles, sounds, delays, limits and other appropriate settings must be configurable.
+
+Support hexadecimal colors and legacy color formatting.
+
+16. TECHNICAL QUALITY REQUIREMENTS
+----------------------------------
+- Use modular Java classes.
+- Follow Bukkit/Paper thread-safety requirements.
+- Never perform blocking database operations on the server main thread.
+- Never access Bukkit APIs asynchronously when they require the main thread.
+- Properly unregister listeners and tasks.
+- Validate configuration values.
+- Provide meaningful console errors.
+- Handle missing dependencies.
+- Do not use unnecessary NMS.
+- Do not invent APIs or unsupported DeluxeMenus features.
+- Avoid hardcoded player-facing messages.
+- Use UUIDs for player identification.
+- Prevent duplicate active sessions.
+- Ensure compatibility with the declared target Paper version.
+- Verify actual dependency APIs before implementing integrations.
+
+17. DEVELOPMENT IMPLEMENTATION STEPS
+-------------------------------------
+Phase 1 — Foundation
+- Create the Gradle project.
+- Set up plugin.yml.
+- Create the main class.
+- Implement configuration loading.
+- Implement dependency checks.
+
+Phase 2 — DeluxeMenus integration
+- Generate all six default menus.
+- Preserve existing files.
+- Implement placeholders.
+- Connect GUI commands.
+- Verify the actual DeluxeMenus registration/reload workflow.
+
+Phase 3 — Duel configuration
+- Implement player targeting.
+- Implement map selection.
+- Implement level selection.
+- Implement theme selection.
+- Implement per-player sessions.
+
+Phase 4 — Bet input
+- Implement private chat input.
+- Implement amount parsing.
+- Implement validation.
+- Implement cancellation and timeout.
+- Implement menu reopening.
+
+Phase 5 — Challenge management
+- Implement invitations.
+- Implement acceptance and denial.
+- Implement expiry.
+- Implement challenge validation.
+
+Phase 6 — Economy
+- Implement balance checks.
+- Implement stake reservations.
+- Implement refunds.
+- Implement payouts.
+- Implement transaction persistence.
+
+Phase 7 — Arena system
+- Implement arena registration.
+- Implement spawn management.
+- Implement availability checks.
+- Implement player teleportation.
+
+Phase 8 — Countdown and combat
+- Implement configurable titles.
+- Implement sounds.
+- Implement match activation.
+- Implement death detection.
+- Implement match completion.
+
+Phase 9 — Recovery and protection
+- Handle disconnects.
+- Handle server restarts.
+- Prevent duplicate transactions.
+- Implement inventory preservation.
+- Implement arena cleanup.
+
+Phase 10 — Testing
+- Test all player commands.
+- Test GUI interactions.
+- Test economy transactions.
+- Test simultaneous duels.
+- Test failure scenarios.
+- Test restart recovery.
+
+18. BUILD AND TESTING
+---------------------
+Create the complete Gradle project and build a working JAR.
+
+Test:
+- Plugin startup.
+- Configuration generation.
+- DeluxeMenus registration.
+- Every menu command.
+- Map selection.
+- Level selection.
+- Theme selection.
+- Private bet input.
+- Invitation acceptance and denial.
+- Economy withdrawal and payout.
+- Simultaneous duels.
+- Player death.
+- Disconnect handling.
+- Server shutdown recovery.
+- Inventory restoration.
+- Reload behavior.
+
+Do not claim a feature works unless it has actually been implemented and tested.
+
+19. DEVELOPMENT INSTRUCTIONS FOR THE CODING AGENT
+-------------------------------------------------
+Work phase by phase.
+
+First inspect the project and installed dependency APIs.
+
+Then implement the foundation, menus, sessions, economy, arenas, countdown and recovery.
+
+Compile after each major phase and fix actual errors before proceeding.
+
+Do not replace working code unnecessarily.
+
+Do not leave TODO methods, empty implementations, fake commands or placeholder functionality.
+
+The final deliverable must be a complete, buildable AstraCasualDuels plugin with:
+- Full Java source code.
+- Gradle build files.
+- plugin.yml.
+- All default configuration files.
+- DeluxeMenus integration.
+- Dependency documentation.
+- Compiled plugin JAR.
+
+20. IMPORTANT DEVELOPMENT DECISIONS
+-----------------------------------
+Recommended defaults:
+
+GUI: DeluxeMenus only
+Menu customization: Administrator-owned YAML
+Bet input: Private chat input
+Wager: Both players stake equal amounts
+Payout: Winner receives 2x the stake
+Kits: No automatic kits
+Equipment: Preserve player equipment
+Maps: Unlimited configurable maps
+Themes: Manually configurable
+Storage: SQLite
+Economy: Vault plus optional direct provider
+Countdown: Fully configurable
+Match isolation: One match per player
+Arena isolation: One match per arena
+
+21. CRITICAL PRODUCTION CONSIDERATIONS
+--------------------------------------
+1. DeluxeMenus registration:
+   Generating a menu file is not enough. Use the actual supported reload/registration workflow. Existing customizations must remain untouched.
+
+2. Inventory protection:
+   Players use their own grinded equipment. Inventory snapshots and restoration must be carefully designed. Death drops, disconnects and server crashes need explicit handling.
+
+3. Wager security:
+   Both stakes must be handled as one logical transaction. A failed second withdrawal must never leave the first player charged.
+
+4. Duel recovery:
+   SQLite must store enough match and escrow information to recover safely after a restart. A server crash must not accidentally award both players or lose reserved currency.
+
+RECOMMENDED DEVELOPMENT ORDER
+-----------------------------
+First make /duel <player> open the actual DeluxeMenus configuration. Then finish selection and bet input. Next implement the challenge system. Finally add arenas, combat and economy transactions.
+
+This order makes debugging easier and keeps GUI integration independent from the combat system.
